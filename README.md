@@ -13,12 +13,12 @@ HOGWARTs (Hunt of Gravitational Wave Areas for Rapid Transients) is an algorithm
 * Identify the galaxies within the GLADE V2 galaxy catalogue which lie within these localisation regions by querying Vizier
 * Calculate a probability of the galaxy being associated with the gravitational wave source using the prioritisation algorithm outlined by Arcavi et al. 2017 :
 * The location probability measure is given as
-
+$$
 \begin{equation}
 S_{loc}=p_{loc}\,p_{dist}
 \end{equation}
-
-The probability that the GW source is at a certain location, <span class="math inline">\(p_{loc}\)</span>, is obtained from the pixel at the position of the galaxy in the sky map. 
+$$
+The probability that the GW source is at a certain location, $p_{loc}$, is obtained from the pixel at the position of the galaxy in the sky map. 
 
 The distance to the merger computed by the LVC is contained in the pixel at the position of the galaxy. It is compared to the distance of the galaxy extracted from the filtered GLADE V2 galaxy catalogue to calculate the distance probability measure $p_{dist}$:
 \begin{equation} 
