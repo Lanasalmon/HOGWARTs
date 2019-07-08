@@ -20,7 +20,7 @@ HOGWARTs (Hunt of Gravitational Wave Areas for Rapid Transients) is an algorithm
 
 	The distance to the merger computed by the LVC is contained in the pixel at the position of the galaxy. It is compared to the distance of the galaxy extracted from the filtered GLADE V2 galaxy catalogue to calculate the distance probability measure <img src="https://latex.codecogs.com/gif.latex?p_{dist}" title="p_{dist}" />:
 
-		<img src="https://latex.codecogs.com/gif.latex?p_{&space;dist}=N_{&space;dist}\,exp(\frac{-[D-\mu_{&space;dist}]^2}{2\sigma_{&space;dist}^2})" title="p_{ dist}=N_{ dist}\,exp(\frac{-[D-\mu_{ dist}]^2}{2\sigma_{ dist}^2})" />
+	<img src="https://latex.codecogs.com/gif.latex?p_{&space;dist}=N_{&space;dist}\,exp(\frac{-[D-\mu_{&space;dist}]^2}{2\sigma_{&space;dist}^2})" title="p_{ dist}=N_{ dist}\,exp(\frac{-[D-\mu_{ dist}]^2}{2\sigma_{ dist}^2})" />
 
 	where <img src="https://latex.codecogs.com/gif.latex?N_{dist}" title="N_{dist}" /> is a normalising factor, <img src="https://latex.codecogs.com/gif.latex?mu_{dist}" title="mu_{dist}" />  is the distance estimate and <img src="https://latex.codecogs.com/gif.latex?sigma_{dist}" title="sigma_{dist}" /> is the distance error computed by BAYESTAR and contained in the pixel at the galaxy's position sky map. D is distance to the galaxy from the filtered GLADE V2 catalogue. 
 
