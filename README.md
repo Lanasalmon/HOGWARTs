@@ -18,7 +18,8 @@ $$
 S_{loc}=p_{loc}\,p_{dist}
 \end{equation}
 $$
-The probability that the GW source is at a certain location, $p_{loc}$, is obtained from the pixel at the position of the galaxy in the sky map. 
+
+The probability that the GW source is at a certain location, p_{loc}, is obtained from the pixel at the position of the galaxy in the sky map. 
 
 The distance to the merger computed by the LVC is contained in the pixel at the position of the galaxy. It is compared to the distance of the galaxy extracted from the filtered GLADE V2 galaxy catalogue to calculate the distance probability measure $p_{dist}$:
 \begin{equation} 
