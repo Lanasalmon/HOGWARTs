@@ -4,7 +4,7 @@ import astropy.units as u
 import pandas as pd
 import json
 
-def create_dataframe(finaldictsorted, ra, dec,name, dist, bmag,contour):
+def create_dataframe(finaldictsorted, ra, dec,name, dist, bmag,contour,cumsumprobs):
     """
     Create sorted dataframe of galaxies.
     
@@ -39,6 +39,7 @@ def create_dataframe(finaldictsorted, ra, dec,name, dist, bmag,contour):
     finaldist=[]
     finalbmag=[]
     finalcontour=[]
+    cumsum=[]
     for i in range(0,len(finaldictsorted)):
         r = 10* u.arcminute
         finalgalname.append(name[finaldictsorted[i][0]])
@@ -48,6 +49,8 @@ def create_dataframe(finaldictsorted, ra, dec,name, dist, bmag,contour):
         finaldist.append(dist[finaldictsorted[i][0]])
         finalbmag.append(bmag[finaldictsorted[i][0]])
         finalcontour.append(contour[finaldictsorted[i][0]])
+        cumsum.append(cumsumprobs[i])
+        
     
     dataf = pd.DataFrame(
                      {'Galaxy name' : finalgalname,
@@ -56,11 +59,12 @@ def create_dataframe(finaldictsorted, ra, dec,name, dist, bmag,contour):
                      'Dec (degrees)': finaldec,
                      'Galaxy name': finalgalname,
                      'Distance (Mpc)': finaldist,
-                     'B magntiude': finalbmag,
-                     'Contour': finalcontour
+                     'B magnitude': finalbmag,
+                     'Contour': finalcontour,
+                     'Cumulative Probability':cumsum
                      
                      })
     
-    dataf = dataf[['Galaxy name', 'Galaxy probability', 'RA (degrees)', 'Dec (degrees)','Distance (Mpc)', 'B magntiude', 'Contour']]
+    dataf = dataf[['Galaxy name', 'Galaxy probability', 'RA (degrees)', 'Dec (degrees)','Distance (Mpc)', 'B magnitude', 'Contour', 'Cumulative Probability']]
     dataf.to_json('output.json')
     return dataf
