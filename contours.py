@@ -609,11 +609,9 @@ def checkifinellipsemoc(moc,nside, ipixes, ra,dec,dist,Bmag,name,f):
     """
 
     galipix=[]
-    for i in range(0,len(ra)):
-        theta = 0.5 * np.pi - np.deg2rad(dec[i])
-        phi = np.deg2rad(ra[i])
-        ipix = hp.ang2pix(nside, theta, phi)
-        galipix.append(ipix)
+    theta= 0.5 * np.pi - np.deg2rad(dec)
+    phi = np.deg2rad(ra)
+    galipix = hp.ang2pix(nside, theta, phi)
         
     keepgalaxyra=[]
     keepgalaxydec=[]
@@ -634,4 +632,4 @@ def checkifinellipsemoc(moc,nside, ipixes, ra,dec,dist,Bmag,name,f):
             keepgalaxyname.append(name[i])
             contours.append(f)
 
-    return keepgalaxyra, keepgalaxydec, keepgalaxydist, keepgalaxyBmag, keepgalaxyname,contours
+    return keepgalaxyra,keepgalaxydec, keepgalaxydist, keepgalaxyBmag, keepgalaxyname,contours
