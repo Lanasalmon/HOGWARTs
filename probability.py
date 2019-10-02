@@ -245,14 +245,14 @@ def extract_LIGO_probability(ra, dec, nside, distsigma, prob, distnorm, distmu):
     pixel_mudist = []
     pixel_distsigma = []
     pixel_distnorm = []
-    for i in range(0, len(ra)):
-        theta = 0.5 * np.pi - np.deg2rad(dec[i])
-        phi = np.deg2rad(ra[i])
-        ipixes = hp.ang2pix(nside, theta, phi)
-        pixel_prob.append(prob[ipixes])
-        pixel_mudist.append(distmu[ipixes])
-        pixel_distsigma.append(distsigma[ipixes])
-        pixel_distnorm.append(distnorm[ipixes])
+    theta = 0.5 * np.pi - np.deg2rad(dec)
+    phi = np.deg2rad(ra)
+    ipixes = hp.ang2pix(nside, theta, phi)
+    pixel_prob=prob[ipixes]
+    pixel_mudist=distmu[ipixes]
+    pixel_distsigma=distsigma[ipixes]
+    pixel_distnorm=distnorm[ipixes]
+
     return pixel_prob, pixel_mudist, pixel_distsigma, pixel_distnorm
 
 def calculate_absolute_probability(distance, Bmag, mudist, distsigma, distnorm, probs):
