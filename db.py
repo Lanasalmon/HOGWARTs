@@ -42,50 +42,6 @@ def radius(ra, dec,i):
     maxra_index, maxra_value = max(enumerate(ra), key=operator.itemgetter(1))
     mindec_index, mindec_value = min(enumerate(dec), key=operator.itemgetter(1))
     maxdec_index, maxdec_value = max(enumerate(dec), key=operator.itemgetter(1))
-import sqlite3
-from astropy.coordinates import SkyCoord
-from astroquery.vizier import Vizier
-import astropy.units as u
-import numpy as np
-import numpy as np
-import operator
-import psycopg2
-import time
-from psycopg2.extensions import AsIs
-import pandas as pd
-import numpy as np
-def radius(ra, dec,i):
-    """
-    Calculate centre coordinates and diameter of circle to enclose contour.
-    
-    Parameters:
-    -----------
-    ra, dec :  list
-        a list of right ascension and declination coordinates for a contour.
-    i : int
-        index corresponding to contour being analysed.
-    Return:
-    -------
-    centrera : float 
-        Centre RA coordinate for contour
-    centredec : float
-        Centre Dec coordinate for contour
-    maxdist : float
-        Diameter of contour
-    
-    
-    """
-
-    width=max(ra)-min(ra)
-    height=max(dec)-min(dec)
-    centrera=min(ra)+width/2
-    centredec=min(dec)+height/2
-    deltadec=max(dec)-min(dec)
-    deltadec=deltadec/2
-    minra_index, minra_value = min(enumerate(ra), key=operator.itemgetter(1))
-    maxra_index, maxra_value = max(enumerate(ra), key=operator.itemgetter(1))
-    mindec_index, mindec_value = min(enumerate(dec), key=operator.itemgetter(1))
-    maxdec_index, maxdec_value = max(enumerate(dec), key=operator.itemgetter(1))
 
     dist1=np.sqrt((ra[minra_index]-centrera)**2+(dec[minra_index]-centredec)**2)
     dist2=np.sqrt((ra[mindec_index]-centrera)**2+(dec[mindec_index]-centredec)**2)
