@@ -110,21 +110,20 @@ def process_gcn(payload, root):
     distmax=distest+diststd
     distmin=distest-diststd
 
-    data=pd.read_hdf('test2.h5','df')
-   
-    data.columns=['PGC','GWGC','HyperLEDA','2MASS','SDSS','flag1','RA','Dec','dist','dist_err','z','Bmag','a','b','c','d','e','f','g','h','i','j']
-
-
-    msk1=data[['dist']]<=distmax
-    msk2=data[['dist']]>=distmin
-    msk3=data[['dist']]>0
-    msk4=data[['dist']]!='NaN'
-    msk5=data[['Bmag']]!='NaN' 
-    msk6=data[['Bmag']]!='null' 
-    msk7=data[['Bmag']]>0 
+    vizier = VizierClass(
+    row_limit=-1, columns=['GWGC', '_RAJ2000', '_DEJ2000', 'Dist','Bmag'])
+    cat, = vizier.get_catalogs('VII/281/glade2')
+    
+    msk1=cat[['Dist']]<=distmax
+    msk2=cat[['Dist']]>=distmin
+    msk3=cat[['Dist']]>0
+    msk4=cat[['Dist']]!='NaN'
+    msk5=cat[['Bmag']]!='NaN' 
+    msk6=cat[['Bmag']]!='null' 
+    msk7=cat[['Bmag']]>0 
     msk=pd.concat((msk1,msk2,msk3,msk4,msk5,msk6,msk7),axis=1)
     slct=msk.all(axis=1)
-    data=data.ix[slct]
+    data=cat.ix[slct]
     
     coordinates=SkyCoord(data['RA'].values*u.deg, data['Dec'].values*u.deg,data['dist'].values*u.Mpc)
     url='https://gracedb.ligo.org/api/superevents/'+graceid+'/files/bayestar.multiorder.fits'
