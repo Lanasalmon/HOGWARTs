@@ -201,7 +201,6 @@ def process_gcn(payload, root):
         contour_plots(split_ra2, split_dec2,graceid, prelim, levelsper[d])
 
 
-        ra_incontour,dec_incontour, dist_incontour, Bmag_incontour, name_incontour,contourss=checkifinellipsemoc(moc,nside, ipixes, data['RA'].values,data['Dec'].values,data['dist'].values, data['Bmag'].values, data['HyperLEDA'].values,1)
         contourss=np.ones(len(ra_incontour))
 
         #if the contour crosses 0/360 degrees, splut it up 
