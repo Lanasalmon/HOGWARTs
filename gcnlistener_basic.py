@@ -81,19 +81,21 @@ def process_gcn(payload, root):
         return
 
     graceid=params['GraceID']
-    prelim=params['AlertType']+params['Pkt_Ser_Num']+'test1'
+    prelim=params['AlertType']+params['Pkt_Ser_Num']
 
     # Read the HEALPix sky map and the FITS header.
-    skymap, header = hp.read_map(params['skymap_fits'],
-                                 h=True, verbose=False)
     
-    header = dict(header)
     hdulist = fits.open(params['skymap_fits'])
     distest = hdulist[1].header['DISTMEAN']
     diststd= hdulist[1].header['DISTSTD']
     
 
-    prob, distmu, distsigma, distnorm = hp.read_map(params['skymap_fits'], field=[0, 1, 2, 3])
+    skymap=read_sky_map(params['skymap_fits'], moc=False,distances=True)
+    
+    prob=skymap[0][0]
+    distmu=skymap[0][1]
+    distsigma=skymap[0][2]
+    distnorm=skymap[0][3]
     npix = len(prob)
     nside=hp.npix2nside(npix)
    
@@ -123,6 +125,12 @@ def process_gcn(payload, root):
     msk=pd.concat((msk1,msk2,msk3,msk4,msk5,msk6,msk7),axis=1)
     slct=msk.all(axis=1)
     data=data.ix[slct]
+    
+    coordinates=SkyCoord(data['RA'].values*u.deg, data['Dec'].values*u.deg,data['dist'].values*u.Mpc)
+    url='https://gracedb.ligo.org/api/superevents/'+graceid+'/files/bayestar.multiorder.fits'
+    skymap=read_sky_map(url, moc=True)
+
+    result=crossmatch(skymap,coordinates)
 
     
     
@@ -176,9 +184,13 @@ def process_gcn(payload, root):
         #separate masked array into separate contours
         split_dec, split_ra = split_contours(contours, levels[d],d)
 
-        start=time.time()
         #retrieve pixels in 50, 90, 99 percent regions
-        moc,ipixes=pixels_in_region(levels[d],params['skymap_fits'])
+        results=data[result.searched_prob_vol<0.99]
+        ra_incontour=results['RA'].values
+        dec_incontour=results['Dec'].values
+        dist_incontour=results['dist'].values
+        Bmag_incontour=results['Bmag'].values
+        name_incontour=results['HyperLEDA'].values
         
        
         # if the contour is split at 0/360 degrees, rejoin back together
@@ -271,7 +283,7 @@ def process_gcn(payload, root):
 
         
         
-        f = open("/home/swalsh/Desktop/HOGWARTs/static/"+graceid+prelim+str(levelsper[d])+".json", "w")
+        f = open(graceid+prelim+str(levelsper[d])+".json", "w")
         f.write(csv)      # str() converts to string
         f.close()
         
@@ -280,7 +292,7 @@ def process_gcn(payload, root):
         for i in range(0,len(jsonlist2)):
 
             csv2= csv2+ str(jsonlist2[i])
-        f = open("/home/swalsh/Desktop/HOGWARTs/static/"+graceid+prelim+str(levelsper[d])+".dat", "w")
+        f = open(+graceid+prelim+str(levelsper[d])+".dat", "w")
         f.write( csv2 )      # str() converts to string
         f.close()
         
@@ -311,7 +323,7 @@ def process_gcn(payload, root):
                          })
         
             datafc = datafc[['Galaxy Name', 'Coordinates', 'J2000','!','Name','Prob']]
-            tfile = open("/home/swalsh/Desktop/HOGWARTs/static/"+graceid+prelim+str(levelsper[d])+".txt", 'a')
+            tfile = open(graceid+prelim+str(levelsper[d])+".txt", 'a')
             tfile.write(datafc.to_string(header=False, index=False))
             tfile.close()
             
