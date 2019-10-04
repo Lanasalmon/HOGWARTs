@@ -9,8 +9,6 @@ import boto3, botocore
 from email.mime.base import MIMEBase
 from email import encoders
 import smtplib
-import gcn.handlers
-import gcn.notice_types
 import healpy as hp
 import numpy as np
 import lxml.etree
@@ -111,19 +109,19 @@ def process_gcn(payload, root):
     distmin=distest-diststd
 
     vizier = VizierClass(
-    row_limit=-1, columns=['GWGC', '_RAJ2000', '_DEJ2000', 'Dist','Bmag'])
+    row_limit=-1, columns=['HyperLEDA', '_RAJ2000', '_DEJ2000', 'Dist','Bmag'],column_filters={'Bmag':'!=null'})
     cat, = vizier.get_catalogs('VII/281/glade2')
-    
-    msk1=cat[['Dist']]<=distmax
-    msk2=cat[['Dist']]>=distmin
-    msk3=cat[['Dist']]>0
-    msk4=cat[['Dist']]!='NaN'
-    msk5=cat[['Bmag']]!='NaN' 
-    msk6=cat[['Bmag']]!='null' 
-    msk7=cat[['Bmag']]>0 
+    data=pd.DataFrame({'RA': cat['_RAJ2000'], 'Dec':cat['_DEJ2000'],'dist':cat['Dist'],'Bmag':cat['Bmag'],'HyperLEDA':cat['HyperLEDA']})
+    msk1=data[['dist']]<=distmax
+    msk2=data[['dist']]>=distmin
+    msk3=data[['dist']]>0
+    msk4=data[['dist']]!='NaN'
+    msk5=data[['Bmag']]!='NaN' 
+    msk6=data[['Bmag']]!='null' 
+    msk7=data[['Bmag']]>0 
     msk=pd.concat((msk1,msk2,msk3,msk4,msk5,msk6,msk7),axis=1)
     slct=msk.all(axis=1)
-    data=cat.ix[slct]
+    data=data.ix[slct]
     
     coordinates=SkyCoord(data['RA'].values*u.deg, data['Dec'].values*u.deg,data['dist'].values*u.Mpc)
     url='https://gracedb.ligo.org/api/superevents/'+graceid+'/files/bayestar.multiorder.fits'
@@ -324,7 +322,8 @@ def process_gcn(payload, root):
             tfile = open(graceid+prelim+str(levelsper[d])+".txt", 'a')
             tfile.write(datafc.to_string(header=False, index=False))
             tfile.close()
-            
+  
+          
 #payload = open('S190910d-1-Preliminary.xml', 'rb').read()
 #root = lxml.etree.fromstring(payload)
 #process_gcn(payload, root)

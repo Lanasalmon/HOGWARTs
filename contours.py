@@ -222,7 +222,7 @@ def contour_plots(split_ra2, split_dec2,graceid, prelim, percentage):
         ax.text(centrecoordcontours.ra.deg,  centrecoordcontours.dec.deg, '%i' %f, transform=ax.get_transform('world'))
 
 
-    plt.savefig('/users/lana/gxgwtest/static/'+graceid+prelim+'contourplot' +str(percentage)+'.png')
+    plt.savefig(graceid+prelim+'contourplot' +str(percentage)+'.png')
     plt.show()
     return
 

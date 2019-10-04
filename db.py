@@ -585,25 +585,8 @@ def make_database(database, table, centrera, centredec, maxdist, distest, distst
     name : list
         galaxy names within contour
     """
-    conn = psycopg2.connect("dbname='%s' user='lana' host='localhost' password='myPass'" %database)
-    conn.autocommit = True
-    cursor = conn.cursor()
-    cursor.execute('SET SESSION synchronous_commit TO OFF;')
-    distmax=distest+diststd
-    distmin=distest-diststd
-    cursor.execute('''CREATE TABLE %s (ra FLOAT,dec FLOAT, distance FLOAT, mag FLOAT, name VARCHAR(100))''' % table)
-    apassconfig = {'catname':'VII/281/glade2',
-    'nicecatname':'GLADE',
-    'ra':'RAJ2000',
-    'dec':'DEJ2000',
-    'distance':'Dist',
-    "B":'Bmag',
-    "maj":'maj',
-    "nameGWGC":'GWGC',
-    "nameHyperLEDA": 'HyperLEDA',
-    }
+    
     coord = SkyCoord(ra=centrera*u.degree, dec=centredec*u.degree, frame='icrs')
-    configdict = apassconfig
     
     v = Vizier(columns=['RAJ2000', 'DEJ2000','Bmag', 'maj', 'Dist','GWGC', 'HyperLEDA'],column_filters={"Bmag":"!= null"})
     v.ROW_LIMIT = -1
@@ -615,7 +598,21 @@ def make_database(database, table, centrera, centredec, maxdist, distest, distst
     majlist=[]
     cc=[]
     name=[]
+    distmax=distest+diststd
+    distmin=distest-diststd
+    apassconfig = {'catname':'VII/281/glade2',
+    'nicecatname':'GLADE',
+    'ra':'RAJ2000',
+    'dec':'DEJ2000',
+    'distance':'Dist',
+    "B":'Bmag',
+    "maj":'maj',
+    "nameGWGC":'GWGC',
+    "nameHyperLEDA": 'HyperLEDA',
+    }
+    configdict = apassconfig
     result = v.query_region(coord, radius=maxdist*u.deg, catalog=configdict['catname'])
+
     print('done query')
     if len(result)<1:
         ralist=[]
@@ -643,9 +640,8 @@ def make_database(database, table, centrera, centredec, maxdist, distest, distst
     print('df made')
     df.to_csv("test1.csv", header=False, index=False)
     f = open('test1.csv')
-    print('csv made')
-    cursor.copy_from(f, str(table), sep=",")
-    print('table made')
+
+   
          
 
     return ralist, declist, distlist, maglist,name
