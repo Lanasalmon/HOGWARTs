@@ -291,7 +291,7 @@ def process_gcn(payload, root):
         for i in range(0,len(jsonlist2)):
 
             csv2= csv2+ str(jsonlist2[i])
-        f = open(+graceid+prelim+str(levelsper[d])+".dat", "w")
+        f = open(graceid+prelim+str(levelsper[d])+".dat", "w")
         f.write( csv2 )      # str() converts to string
         f.close()
         
