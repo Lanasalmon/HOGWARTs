@@ -8,9 +8,9 @@
 HOGWARTs (Hunt of Gravitational Wave Areas for Rapid Transients) is an algorithm which can be used to generate ranked lists of candidate galaxies within LIGO/Virgo localisation regions. The algorithm performs the following operations :
 
 * Listen for a GCN containing a new gravitational wave alert
-* Download and read the skymap using healpy
-* Identify the contours containing 50%, 90% and 99% of the probability in the map
-* Identify the galaxies within the GLADE V2 galaxy catalogue which lie within these localisation regions by querying Vizier
+* Download and read the skymap
+* Identify the contours containing 99% of the probability in the map
+* Identify the galaxies within the GLADE V2 galaxy catalogue which lie within these localisation regions
 * Calculate a probability of the galaxy being associated with the gravitational wave source using the prioritisation algorithm outlined by [Arcavi et al. 2017](https://arxiv.org/abs/1710.05842):
 	* The location probability measure is given as :
 
@@ -32,4 +32,15 @@ HOGWARTs (Hunt of Gravitational Wave Areas for Rapid Transients) is an algorithm
 	<img src="https://latex.codecogs.com/gif.latex?S=S_{loc}\,S_{lum}" title="S=S_{loc}\,S_{lum}" />
 	This score computed for all galaxies and then the scores are normalised to add to 1.
 
-* The galaxies are ranked in descending order and their properties are saved in a json and ascii file for each of the 50%, 90% and 99% localisation regions.
+* The galaxies are ranked in descending order and their properties are saved in a json and ascii file for the 99% localisation regions.
+
+
+<a name="intro"/>
+
+## Options
+
+There are two galaxy ranking scripts:
+* gcnlistener_basic.py - This script outputs ranked galaxy lists for a gravitational wave event without identifying which contour the galaxies are in. it is faster than the contour script.
+* gcnlistener_with_contour_id.py - This script outputs ranked galaxy lists for a gravitational wave event, and identifies the contour in which each galaxy lies using mocpy and Astroquery.
+
+These scripts, when run, will listen for GCNs containing GW alerts. To test the scripts, xml files fromt he GraceDB webpage can be analysed by uncommenting the 3 commented lines at the bottom of the scripts.
