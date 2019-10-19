@@ -23,3 +23,33 @@ def GLADEV2coordinates(distmax,distmin):
 
     coordinates=SkyCoord(data['RA'].values*u.deg, data['Dec'].values*u.deg,data['dist'].values*u.Mpc)
     return coordinates,data
+
+
+
+def Viziergalaxies(split_ra2, split_dec2,i,distest,diststd):
+    diff_values_ra = np.diff(split_ra2[i])
+
+    #if the contour crosses 0/360 degrees, splut it up again so we can perform query in Vizier
+    if max(diff_values_ra)>350:
+        
+
+        split_index_ra = np.where(np.abs(diff_values_ra) > 350)[0]
+        split_index_ra += 1
+
+        #split at point where 0 goes to 360
+        split_ra_360, split_dec_360=split_ra_dec(split_ra2, split_dec2, split_index_ra, i)
+        
+        #get centre coordinates and diameter of circle which encloses contour region
+        centreras, centredecs, maxdists =get_centres(split_ra_360, split_dec_360,i)
+        
+        #query vizier using the circle and save in database for that contour
+        galaxy_ra, galaxy_dec, galaxy_dist, galaxy_Bmag, galaxyname=make_database_list(centreras, centredecs, maxdists, distest, diststd)
+        
+        
+    else: 
+        #if the contour doesn't cross 0/360 degrees, get centre coordinates and diameter of circle
+        centrera,centredec, maxdist=radius(split_ra2[i], split_dec2[i],i)
+        
+        #query vizier using the circle and save in database for that contour
+        galaxy_ra, galaxy_dec, galaxy_dist, galaxy_Bmag,galaxyname=make_database( centrera, centredec, maxdist, distest, diststd)
+    return galaxy_ra, galaxy_dec, galaxy_dist, galaxy_Bmag,galaxyname
