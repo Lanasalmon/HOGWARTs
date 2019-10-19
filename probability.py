@@ -7,6 +7,14 @@ import healpy as hp
 from numpy.linalg import eig, inv
 import operator
 
+def sortbyprob(finalprobslist):
+
+    Snumber=np.arange(0,len(finalprobslist),1)
+    fullprobs = dict(zip(Snumber, finalprobslist))
+    finaldictsorted = sorted(fullprobs.items(), key=operator.itemgetter(1), reverse=True)
+    finalprobsorted=sorted(finalprobslist, reverse=True)
+    cumsumprobs=np.cumsum(finalprobsorted)
+    return finaldictsorted, cumsumprobs
 
 def unique_galaxies(contourlist, contourss,ra_incontourlist1, ra_incontour, dec_incontourlist1, dec_incontour, dist_incontourlist1, dist_incontour, probs_incontourlist1, name_incontour, finalgalname, probs,Bmag_incontourlist1, Bmag_incontour,mudists_incontourlist1, mudists,distssigma_incontourlist1, distssigma,distsnorm_incontourlist1, distsnorm):
     """
