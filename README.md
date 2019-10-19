@@ -39,8 +39,10 @@ HOGWARTs (Hunt of Gravitational Wave Areas for Rapid Transients) is an algorithm
 
 ## Options
 
-There are two galaxy ranking scripts:
+There are two galaxy ranking scripts in separate branches. On master:
 * gcnlistener_basic.py - This script outputs ranked galaxy lists for a gravitational wave event without identifying which contour the galaxies are in. it is faster than the contour script.
+
+On V0 branch:
 * gcnlistener_with_contour_id.py - This script outputs ranked galaxy lists for a gravitational wave event, and identifies the contour in which each galaxy lies using mocpy and Astroquery.
 
 These scripts, when run, will listen for GCNs containing GW alerts. To test the scripts, xml files fromt he GraceDB webpage can be analysed by uncommenting the 3 commented lines at the bottom of the scripts.
