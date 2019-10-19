@@ -65,7 +65,7 @@ def process_gcn(payload, root):
     distmin=distest-3*diststd
     
     #get coordinates of all GLADEV2 galaxies
-    coordinates=GLADEV2coordinates(distmax,distmin)
+    coordinates,data=GLADEV2coordinates(distmax,distmin)
     
     #crossmatch GLADE with multiorder skymap
     url='https://gracedb.ligo.org/api/superevents/'+graceid+'/files/bayestar.multiorder.fits'
@@ -147,8 +147,8 @@ def process_gcn(payload, root):
         #create files
         jsonlist.append(dataf[['Galaxy name', 'Galaxy probability', 'RA (degrees)', 'Dec (degrees)','Distance (Mpc)', 'B magnitude', 'Cumulative Probability']].to_json())
         jsonlist2.append(dataf[['Galaxy name', 'Galaxy probability', 'RA (degrees)', 'Dec (degrees)','Distance (Mpc)', 'B magnitude','Cumulative Probability']].to_csv())
-        createtxtfile(dataf,finalgalnamelist, finaldictsorted,graceid,prelim,levelsper,d,ccc)                                                                           
-        createjsonfile(jsonlist,graceid,prelim,levelsper,d,,graceid,prelim,levelsper,d)
+        createtxt(dataf,finalgalnamelist, finaldictsorted,graceid,prelim,levelsper,d,ccc)                                                                           
+        createjsonfile(jsonlist,graceid,prelim,levelsper,d,graceid,prelim,levelsper,d)
         createasciifile(jsonlist2,graceid,prelim,levelsper,d)
   
           
