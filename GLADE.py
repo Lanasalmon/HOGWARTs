@@ -3,6 +3,7 @@ from astroquery.vizier import VizierClass
 from astropy.coordinates import SkyCoord
 import pandas as pd
 import astropy.units as u
+import numpy as np
 
 def GLADEV2coordinates(distmax,distmin):
 
