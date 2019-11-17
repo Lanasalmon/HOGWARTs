@@ -61,8 +61,8 @@ def process_gcn(payload, root):
     levelsper=[99]
 
     #define distance limits
-    distmax=distest+3*diststd
-    distmin=distest-3*diststd
+    distmax=distest+5*diststd
+    distmin=distest-5*diststd
     
     #get coordinates of all GLADEV2 galaxies
     coordinates,data=GLADEV2coordinates(distmax,distmin)
@@ -104,7 +104,7 @@ def process_gcn(payload, root):
         split_dec, split_ra = split_contours(contours, levels[d],d)
 
         #retrieve galaxies in 99 percent regions
-        results=data[result.searched_prob_vol<0.99]
+        results=data[result.searched_prob<0.99]
         ra_incontour=results['RA'].values
         dec_incontour=results['Dec'].values
         dist_incontour=results['dist'].values
