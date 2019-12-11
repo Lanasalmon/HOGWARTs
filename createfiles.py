@@ -37,7 +37,7 @@ def createtxt(dataf, finalgalnamelist, finaldictsorted,graceid,prelim,levelsper,
          })
 
     datafc = datafc[['Galaxy Name', 'Coordinates', 'J2000','!','Name','Prob']]
-    tfile = open("/home/swalsh/Desktop/HOGWARTs/static/"+graceid+prelim+str(levelsper[d])+".txt", 'a')
+    tfile = open(graceid+prelim+str(levelsper[d])+".txt", 'a')
     tfile.write(datafc.to_string(header=False, index=False))
     tfile.close()
     return   
@@ -49,7 +49,7 @@ def createjsonfile(jsonlist,graceid,prelim,levelsper,d):
         else:
             csv = csv + str(jsonlist[i])
     csv= csv+ ']'
-    f = open("/home/swalsh/Desktop/HOGWARTs/static/"+graceid+prelim+str(levelsper[d])+".json", "w")
+    f = open(graceid+prelim+str(levelsper[d])+".json", "w")
     f.write(csv)      # str() converts to string
     f.close()
     return 
@@ -61,7 +61,7 @@ def createasciifile(jsonlist2,graceid,prelim,levelsper,d):
     for i in range(0,len(jsonlist2)):
 
         csv2= csv2+ str(jsonlist2[i])
-    f = open("/home/swalsh/Desktop/HOGWARTs/static/"+graceid+prelim+str(levelsper[d])+".dat", "w")
+    f = open(graceid+prelim+str(levelsper[d])+".dat", "w")
     f.write( csv2 )      # str() converts to string
     f.close()
     return
