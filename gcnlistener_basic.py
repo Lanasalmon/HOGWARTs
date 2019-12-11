@@ -146,8 +146,7 @@ def process_gcn(payload, root):
         
         #create files
         jsonlist.append(dataf[['Galaxy name', 'Galaxy probability', 'RA (degrees)', 'Dec (degrees)','Distance (Mpc)', 'B magnitude', 'Cumulative Probability']].to_json())
-        jsonlist2.append(dataf[['Galaxy name', 'Galaxy probability', 'RA (degrees)', 'Dec (degrees)','Distance (Mpc)', 'B magnitude','Cumulative Probability']].to_csv())
-        createtxt(dataf,finalgalnamelist, finaldictsorted,graceid,prelim,levelsper,d,ccc)                                                                           
+        jsonlist2.append(dataf[['Galaxy name', 'Galaxy probability', 'RA (degrees)', 'Dec (degrees)','Distance (Mpc)', 'B magnitude','Cumulative Probability']].to_csv())                                                                     
         createjsonfile(jsonlist,graceid,prelim,levelsper,d)
         createasciifile(jsonlist2,graceid,prelim,levelsper,d)
   
