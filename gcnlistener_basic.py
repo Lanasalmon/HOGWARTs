@@ -68,7 +68,31 @@ def process_gcn(payload, root):
     coordinates,data=GLADEV2coordinates(distmax,distmin)
     
     #crossmatch GLADE with multiorder skymap
-    url='https://gracedb.ligo.org/api/superevents/'+graceid+'/files/bayestar.multiorder.fits'
+    if 'v1' in params['skymap_fits']:
+        version='.v1'
+    if 'v0' in params['skymap_fits']:
+        version='.v0'
+    if 'v2' in params['skymap_fits']:
+        version='.v2'
+    else:
+        version=''
+    if ',0' in params['skymap_fits']:
+        after=',0'
+    if ',1' in params['skymap_fits']:
+        after=',1'
+    if ',2' in params['skymap_fits']:
+        after=',2'
+    if ',3' in params['skymap_fits']:
+        after=',3'
+    else:
+        after=''
+
+    
+    if 'bayestar' in params['skymap_fits']:
+
+        url='https://gracedb.ligo.org/api/superevents/'+graceid+'/files/bayestar.multiorder.fits'+after
+    else:
+        url='https://gracedb.ligo.org/api/superevents/'+graceid+'/files/LALInference'+version+'.multiorder.fits'+after
     skymap=read_sky_map(url, moc=True)
     result=crossmatch(skymap,coordinates)
 
@@ -77,7 +101,7 @@ def process_gcn(payload, root):
 
         jsonlist=[]
         jsonlist2=[]
-        
+        tablenames=[]
         ra_incontourlist=[]
         contourlens=[]
         dec_incontourlist=[]
@@ -88,6 +112,7 @@ def process_gcn(payload, root):
         ra_incontourlist1=[]
         dec_incontourlist1=[]
         probs_incontourlist1=[]
+        probs_incontourlist=[]
         finalgalnamelist1=[]
         dist_incontourlist1=[]
         Bmag_incontourlist1=[]
@@ -95,6 +120,8 @@ def process_gcn(payload, root):
         mudists_incontourlist1=[]
         distssigma_incontourlist1=[]
         distsnorm_incontourlist1=[]
+        pdist_incontourlist1=[]
+        Slum_incontourlist1=[]
         contourlist1=[]
         contourlist=[]
         contourss=[]
