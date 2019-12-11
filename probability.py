@@ -7,14 +7,6 @@ import healpy as hp
 from numpy.linalg import eig, inv
 import operator
 
-def sortbyprob(finalprobslist):
-
-    Snumber=np.arange(0,len(finalprobslist),1)
-    fullprobs = dict(zip(Snumber, finalprobslist))
-    finaldictsorted = sorted(fullprobs.items(), key=operator.itemgetter(1), reverse=True)
-    finalprobsorted=sorted(finalprobslist, reverse=True)
-    cumsumprobs=np.cumsum(finalprobsorted)
-    return finaldictsorted, cumsumprobs
 
 def unique_galaxies(contourlist, contourss,ra_incontourlist1, ra_incontour, dec_incontourlist1, dec_incontour, dist_incontourlist1, dist_incontour, probs_incontourlist1, name_incontour, finalgalname, probs,Bmag_incontourlist1, Bmag_incontour,mudists_incontourlist1, mudists,distssigma_incontourlist1, distssigma,distsnorm_incontourlist1, distsnorm):
     """
@@ -126,7 +118,7 @@ def unique_galaxies(contourlist, contourss,ra_incontourlist1, ra_incontour, dec_
     contourlist= [contourlist[i] for i in indices]
     return indices, finalgalname,ra_incontourlist1,dec_incontourlist1,dist_incontourlist1,Bmag_incontourlist1,probs_incontourlist1,mudists_incontourlist1,distssigma_incontourlist1,distsnorm_incontourlist1, contourlist
 
-def makelists(finalprobss,ra_incontourlist,ra_incontourlist1,dec_incontourlist,dec_incontourlist1,finalprobslist,finalgalnamelist,finalgalname,dist_incontourlist,dist_incontourlist1,Bmag_incontourlist,Bmag_incontourlist1,contourlist,contourss):
+def makelists(finalprobss,ra_incontourlist,ra_incontourlist1,dec_incontourlist,dec_incontourlist1,probs, probs_incontourlist, finalprobslist,finalgalnamelist,finalgalname,dist_incontourlist,dist_incontourlist1,Bmag_incontourlist,Bmag_incontourlist1,contourlist,contourss, pdist, pdistlist, Slum, Slumlist):
     """
     Combine all parameters from all contours together into single lists
 
@@ -213,7 +205,11 @@ def makelists(finalprobss,ra_incontourlist,ra_incontourlist1,dec_incontourlist,d
     dist_incontourlist=np.append(dist_incontourlist,dist_incontourlist1)
     Bmag_incontourlist=np.append(Bmag_incontourlist,Bmag_incontourlist1)
     contourlist=np.append(contourlist,contourss)
-    return finalprobss,ra_incontourlist,dec_incontourlist,finalprobslist,finalgalnamelist, dist_incontourlist,Bmag_incontourlist,contourlist
+    pdistlist=np.append(pdistlist,pdist)
+    Slumlist=np.append(Slumlist,Slum)
+    probs_incontourlist=np.append(probs_incontourlist,probs)
+    return finalprobss,ra_incontourlist,dec_incontourlist,finalprobslist,probs_incontourlist,finalgalnamelist, dist_incontourlist,Bmag_incontourlist,contourlist, pdistlist, Slumlist
+
 
 def extract_LIGO_probability(ra, dec, nside, distsigma, prob, distnorm, distmu):
     """
@@ -263,6 +259,16 @@ def extract_LIGO_probability(ra, dec, nside, distsigma, prob, distnorm, distmu):
 
     return pixel_prob, pixel_mudist, pixel_distsigma, pixel_distnorm
 
+def sortbyprob(finalprobslist):
+
+    Snumber=np.arange(0,len(finalprobslist),1)
+    fullprobs = dict(zip(Snumber, finalprobslist))
+    finaldictsorted = sorted(fullprobs.items(), key=operator.itemgetter(1), reverse=True)
+    finalprobsorted=sorted(finalprobslist, reverse=True)
+    cumsumprobs=np.cumsum(finalprobsorted)
+    return finaldictsorted, cumsumprobs
+
+
 def calculate_absolute_probability(distance, Bmag, mudist, distsigma, distnorm, probs):
     """
     Calculate probability score for each galaxy
@@ -309,6 +315,13 @@ def calculate_absolute_probability(distance, Bmag, mudist, distsigma, distnorm, 
         L = Lsun * 2.512 ** (Msun - Mb)
         Lb = Lsun * 2.512 ** (Msun - Mb)
         Lblist.append(Lb)
+        # if distance[i]==1432.19 and Bmag[i]==14.185:
+        #     print('Lb',Lb)
+        # if distance[i]==1393.16 and Bmag[i]==17.67:
+        #     print('Lb2',Lb)
+        # if distance[i]==1445.44 and Bmag[i]==18.442:
+        #     print('Lb3',Lb)
+
     targets={}
 
     Sdet=[]
@@ -320,10 +333,23 @@ def calculate_absolute_probability(distance, Bmag, mudist, distsigma, distnorm, 
     pdist=np.array(distnorm) * np.exp(-((np.array(distance) - np.array(mudist)) ** 2) / (2 * np.array(distsigma) ** 2))
     Sloc=(np.array(probs)*np.array(pdist))
     Slum=np.array(Lblist)/np.sum(Lblist)
-    SS=Sloc * Slum
     
+
+
+    SS=Sloc * Slum
+
     S = Sloc * Slum 
+    
+    # for s in range(0,len(pdist)):
+    #     if distance[s]==1432.19 and Bmag[s]==14.185:
+    #         print('pdist',pdist[s], Sloc[s], Slum[s],S[s])
+    #     if distance[s]==1393.16 and Bmag[s]==17.67:
+    #         print('pdist2',pdist[s],Sloc[s],Slum[s],S[s])
+    #     if distance[s]==1445.44 and Bmag[s]==18.442:
+    #         print('pdist3',pdist[s],Sloc[s],Slum[s],S[s])    
     Slist.append(S)
+    
 
     print(sum(Slist/np.sum(Slist)))
-    return Slist/np.sum(Slist)
+   
+    return Slist/np.sum(Slist), pdist, Slum
