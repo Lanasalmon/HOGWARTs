@@ -124,29 +124,31 @@ def process_gcn(payload, root):
         
         # remove duplicates
         indices, finalgalname, ra_incontourlist1,dec_incontourlist1,dist_incontourlist1,Bmag_incontourlist1,probs_incontourlist1,mudists_incontourlist1,distssigma_incontourlist1,distsnorm_incontourlist1, contourlist=unique_galaxies(contourlist, contourss,ra_incontourlist1, ra_incontour, dec_incontourlist1, dec_incontour, dist_incontourlist1, dist_incontour, probs_incontourlist1, name_incontour, finalgalname, probs,Bmag_incontourlist1, Bmag_incontour,mudists_incontourlist1, mudists,distssigma_incontourlist1, distssigma,distsnorm_incontourlist1, distsnorm)
-
+        
         # Calculate probability score
        
-        finalprobs = calculate_absolute_probability(dist_incontourlist1, Bmag_incontourlist1, mudists_incontourlist1, distssigma_incontourlist1,distsnorm_incontourlist1,probs_incontourlist1)
+        finalprobs,pdist,Slum = calculate_absolute_probability(dist_incontourlist1, Bmag_incontourlist1, mudists_incontourlist1, distssigma_incontourlist1,distsnorm_incontourlist1,probs_incontourlist1)
         
         finalprobss=[]
         for j in range(0,len(finalprobs[0])):
             finalprobss.append(finalprobs[0,j])
         # make lists for dataframes
         
-        finalprobss,ra_incontourlist,dec_incontourlist,finalprobslist,finalgalnamelist, dist_incontourlist,Bmag_incontourlist,contourlist1 = makelists(finalprobss,ra_incontourlist,ra_incontourlist1,dec_incontourlist,dec_incontourlist1,finalprobslist,finalgalnamelist,finalgalname,dist_incontourlist,dist_incontourlist1,Bmag_incontourlist,Bmag_incontourlist1,contourlist1,contourlist)
+        finalprobss,ra_incontourlist,dec_incontourlist,finalprobslist,probs_incontourlist, finalgalnamelist, dist_incontourlist,Bmag_incontourlist,contourlist1,pdist_incontourlist1, Slum_incontourlist1 = makelists(finalprobss,ra_incontourlist,ra_incontourlist1,dec_incontourlist,dec_incontourlist1,finalprobslist, probs_incontourlist1, probs_incontourlist, finalgalnamelist,finalgalname,dist_incontourlist,dist_incontourlist1,Bmag_incontourlist,Bmag_incontourlist1,contourlist1,contourlist,pdist, pdist_incontourlist1, Slum, Slum_incontourlist1)
         
         #sort by descending probability
                                                                                          
-        finaldictsorted, cumsumprobs=sortbyprob(finalprobslist)    
+        finaldictsorted, cumsumprobs=sortbyprob(finalprobslist)
         
         #create dataframe for jsons
         
-        dataf=create_dataframe(finaldictsorted, ra_incontourlist, dec_incontourlist, finalgalnamelist, dist_incontourlist, Bmag_incontourlist, contourlist,cumsumprobs)
+        dataf=create_dataframe(finaldictsorted, ra_incontourlist, dec_incontourlist, probs_incontourlist, finalgalnamelist, dist_incontourlist, pdist_incontourlist1, Bmag_incontourlist, Slum_incontourlist1, contourlist,cumsumprobs)
         
-        #create files
-        jsonlist.append(dataf[['Galaxy name', 'Galaxy probability', 'RA (degrees)', 'Dec (degrees)','Distance (Mpc)', 'B magnitude', 'Cumulative Probability']].to_json())
-        jsonlist2.append(dataf[['Galaxy name', 'Galaxy probability', 'RA (degrees)', 'Dec (degrees)','Distance (Mpc)', 'B magnitude','Cumulative Probability']].to_csv())                                                                     
+        
+        jsonlist.append(dataf[['Galaxy name', 'Galaxy probability score', 'RA (degrees)', 'Dec (degrees)','Location probability score','Distance (Mpc)', 'Distance probability score', 'B magnitude', 'B luminosity probability score','Cumulative Score']].to_json())
+        jsonlist2.append(dataf[['Galaxy name', 'Galaxy probability score', 'RA (degrees)', 'Dec (degrees)','Location probability score','Distance (Mpc)', 'Distance probability score','B magnitude','B luminosity probability score','Cumulative Score']].to_csv())
+        
+        #createtxt(dataf,finalgalnamelist, finaldictsorted,graceid,prelim,levelsper,d,ccc)                                                                
         createjsonfile(jsonlist,graceid,prelim,levelsper,d)
         createasciifile(jsonlist2,graceid,prelim,levelsper,d)
   
